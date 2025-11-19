@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('staffHome') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Ratings Overview </h1>
+        </div>
+<div class="container">
+        {% if flight_details %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Flight Number</th>
+                    <th>Average Rating</th>
+                    <th>Ratings and Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for flight in flight_details %}
+                <tr>
+                    <td>{{ flight.flight_num }}</td>
+                    <td>
+                        {% if flight.average is not none %}
+                            {{ "%.2f" | format(flight.average) }}
+                        {% else %}
+                            No ratings
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if flight.ratings_comments %}
+                            <ul>
+                                {% for entry in flight.ratings_comments %}
+                                <li><strong>Rating:</strong> {{ entry.rating }}<br>
+                                    <strong>Comment:</strong> {{entry.comment}}
+                                </li>
+                                
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            No comments
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No ratings or comments available for any flights.</p>
+        {% endif %}
+</div>
+</body>
+</html>

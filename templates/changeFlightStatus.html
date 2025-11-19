@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('staffHome') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Change Flight Status </h1>
+        </div>
+<form action = '/changeFlightStatus' method="POST">
+  <label for="airplane_id">Airplane ID:</label>
+  <input type="text" name="airplane_id" placeholder="airplane_id">
+  <label for="status">Update Status:</label>
+  <select name="status" id="status" required>
+            <option value="on-time">On-time</option>
+            <option value="delayed">Delayed</option>
+        </select>
+        <div class="submitButton"><button type="submit">Submit</button></div>
+        
+
+</form>
+</body>
+</html>

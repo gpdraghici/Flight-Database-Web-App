@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <title>Purchase Ticket</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+
+    </head>
+    <body>
+
+        <div class="navigation">
+            <div><a href="{{ url_for('userHome') }}">Home</a></div>
+            <div><a href="{{ url_for('tripSearch') }}">Trip Search</a></div>
+            <div><a href="{{ url_for('spending') }}">Your Spending</a></div>
+            <div><a href="{{ url_for('userLogout') }}">Logout</a></div>
+        </div>
+
+        <div class="heading">
+            <h1>Purchase Ticket</h1>
+        </div>
+
+        <!--form for ticket Purchase-->
+        <div class="purchaseForm">
+            <!--POSTS inputs to actualTicketPurchase in flask-->
+            <form id="purchaseTicketForm" action="/actualTicketPurchase" method="POST">
+                <div class="purchaseSection email">
+                        <label for="purchaseEmail">Email:</label>
+                        <input type="text" id="purchaseEmail" name="purchaseEmail" placeholder="email">
+                </div>
+
+                <div class="purchaseSection firstName">
+                    <label for="purchaseFirstName">First Name:</label>
+                    <input type="text" id="purchaseFirstName" name="purchaseFirstName" placeholder="First Name">
+                </div>
+
+                <div class="purchaseSection lastName">
+                    <label for="purchaseLastName">Last Name:</label>
+                    <input type="text" id="purchaseLastName" name="purchaseLastName" placeholder="Last Name">
+                </div>
+                 
+               
+                <div class="purchaseSection dob">
+                    <div>
+                        <label for="purchaseDOB">Date of Birth:</label>
+                        <!--month-->
+                        <select name="purchaseDOBMonth" id="purchaseDOBMonth">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <!--day-->
+                        <input type="text" id="purchaseDOBDay" name="purchaseDOBDay" placeholder="Day">
+
+                        <!--year-->
+                        <input type="text" id="purchaseDOBYear" name="purchaseDOBYear" placeholder="Year">
+                    </div>
+                </div>
+
+                <div class="purchaseSection cardNum">
+                    <label for="purchaseCardNum">Card Number:</label>
+                    <input type="text" id="purchaseCardNum" name="purchaseCardNum" placeholder="0000 0000 0000 0000">
+                </div>
+
+                <div class="purchaseSection cardExp">
+                    <label for="purchaseCardExp">Card Expiration Date:</label>
+                    <input type="text" id="purchaseCardExp" name="purchaseCardExp" placeholder="00/00">
+                </div>
+                <div class = 'purchaseSection'>
+                    <label for="cardType">Card Type: </label>
+                    <select name="cardType" id="cardType" required>
+                        <option value="credit">credit</option>
+                        <option value="debit">debit</option>
+                    </select><br>
+                </div>
+
+                <!--Information send from flight search-->
+                <!--PurchaseInfoNum is the flight number of the ticket being purchased-->
+                <!--The 1 and 2 are due to possible roundtrip purchases-->
+                <input type="hidden" name="purchaseInfoNum1" value="{{ purchaseInfoNum1 }}">
+                <input type="hidden" name="purchaseInfoPrice1" value="{{ purchaseInfoPrice1 }}">
+                <input type="hidden" name="purchaseInfoNum2" value="{{ purchaseInfoNum2 }}">
+                <input type="hidden" name="purchaseInfoPrice2" value="{{ purchaseInfoPrice2 }}">
+                <div class="purchaseSection purchaseButton"><button type="submit">Purchase</button></div>
+                
+            </form>
+        </div>
+    </body>
+</html>

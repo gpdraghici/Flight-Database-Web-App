@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <title>Results Template</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+
+    </head>
+    <body>
+        <div class="navigation">
+            <div><a href="{{ url_for('loginAuth') }}">Login</a></div>
+            <div><a href="{{ url_for('homepage') }}">Back</a></div>
+            
+        </div>
+
+        <div class="availableFlights">
+            <h2 class="subheading">Available Flights</h2>
+                {% if flightInfoLeaving and flightInfoReturning and tripType=='round-trip'%}
+                    {% for leaving, returning in combinedData %}
+                        <div class="flights">
+                            <div class = "sectionFlight line1">
+                                <p>{{ leaving['airline'] }}</p>
+                                <p>{{ leaving['departureDate'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line2">
+                                <p>{{ leaving['departureTime'] }}</p>
+                                <p> ----------------------------------------></p>
+                                <p>{{ leaving['arrivalTime'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line3">
+                                <p>{{ leaving['departureLocation'] }}</p>
+                                <p>{{ leaving['arrivalLocation'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line4">
+                                <p>Status: {{ leaving['status'] }}</p>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <div class = "sectionFlight line1">
+                                <p>{{ returning['airline'] }}</p>
+                                <p>{{ returning['departureDate'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line2">
+                                <p>{{ returning['arrivalTime'] }}</p>
+                                <p> <----------------------------------------</p>
+                                <p>{{ returning['departureTime'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line3">
+                                <p>{{ returning['arrivalLocation'] }}</p>
+                                <p>{{ returning['departureLocation'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line4">
+                                <p>Status: {{ returning['status'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line5">
+                                <p>${{ returning['basePrice'] + leaving['basePrice']}}</p>
+                            </div>
+                            <div class = "sectionFlight line6">
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+                {% elif flightInfoLeaving and tripType == "one-way"%}
+                    {% for flight in flightInfoLeaving %}
+                        <div class="flights">
+                            <div class = "sectionFlight line1">
+                                <p>{{ flight['airline'] }}</p>
+                                <p>{{ flight['departureDate'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line2">
+                                <p>{{ flight['departureTime'] }}</p>
+                                <p> ----------------------------------------></p>
+                                <p>{{ flight['arrivalTime'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line3">
+                                <p>{{ flight['departureLocation'] }}</p>
+                                <p>{{ flight['arrivalLocation'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line4">
+                                <p>Status: {{ flight['status'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line5">
+                                <p>${{ flight['basePrice'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line6">
+                            
+
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class ="message">
+                        <p>There are not any available flights with these details</p>
+                    </div>
+                {% endif %}
+        </div>
+
+            
+            
+    </body>
+</html>

@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="navigation">
+            <div><a href="{{ url_for('loginAuth') }}">Login</a></div>
+            <div><a href="{{ url_for('customerRegister') }}">Customer Registration</a></div>
+            <div><a href="{{ url_for('staffRegister') }}">Staff Registration</a></div>
+        </div>
+        <div class="heading">
+            <h1>Welcome!</h1>
+        </div>
+        <!-- ADD IN STUFF ABOUT FLIGHT SEARCH -->
+        <div class="heading">
+            <h1>Find your next trip!</h1>
+        </div>
+        <div class="flightForm">
+            <!--form for flight search-->
+            <form class="flightSearch" id="customerFlightSearch" action="/homepage" method="POST">
+                <div class="formSection locations">
+                    <!--Starting point drop down-->
+                    <div>
+                        <label for="startingPoint">From:</label>
+                        <select id="startingPoint" name="startingPoint">
+                            {% for code in codes %}
+                                <option value="{{ code['airport_code'] }}">{{ code['airport_code'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div><p>-----------------------------------></p></div>
+                    <!--destination drop down-->
+                    <div>
+                        <label for="destination">To:</label>
+                        <select id="destination" name="destination">
+                            {% for code in codes %}
+                                <option value="{{ code['airport_code'] }}">{{ code['airport_code'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="formSection typeSelection">
+                    <!--One way or round trip-->
+                    <div>
+                        <input type="radio" id="one-way" name="tripType" value="one-way" checked>
+                        <label for="one-way">one-way</label>
+                    </div>
+                    
+                    <div>
+                        <input type="radio" id="round-trip" name="tripType" value="round-trip">
+                        <label for="round-trip">round-trip</label>
+                    </div>
+                </div>
+
+                <div class="formSection deptDate">
+                    <input type="date" name="deptDate" placeholder="departure date"/></br>
+                </div>
+
+                <div class="formSection returnDate" id="returnDate">
+                    <input type="date" name="retDate" placeholder="return date"/></br>
+                </div>
+
+                <div class="formSection searchButton"><button type="submit">Search</button></div>
+
+
+
+      </body>
+</html>

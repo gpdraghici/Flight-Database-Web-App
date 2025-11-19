@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+        <script>
+        function addEmailField() {
+            const emailContainer = document.getElementById('email-container');
+            const newField = document.createElement('input');
+            newField.type = 'text';
+            newField.name = 'emails[]';
+            newField.placeholder = 'Additional Email';
+            emailContainer.appendChild(newField);
+            emailContainer.appendChild(document.createElement('br'));
+        }
+
+        function addPhoneField() {
+            const phoneContainer = document.getElementById('phone-container');
+            const newField = document.createElement('input');
+            newField.type = 'text';
+            newField.name = 'phone_numbers[]';
+            newField.placeholder = 'Additional Phone Number';
+            phoneContainer.appendChild(newField);
+            phoneContainer.appendChild(document.createElement('br'));
+        }
+    </script>
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('homepage') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Welcome!</h1>
+        </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="alert {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+<h2 class="subheading">Please enter the required information</h2>
+<form action="/staffRegister" method = 'POST'>
+    <label for="username">Username:</label>
+    <input type="text" name="username" placeholder="username"/></br>
+    <label for="airline_name">Airline Name:</label>
+    <input type="text" name="airline_name" placeholder="airline_name"/></br>
+    <label for="first_name">First Name:</label>
+    <input type="text" name="first_name" placeholder="first_name"/></br>
+    <label for="last_name">Last Name:</label>
+    <input type="text" name="last_name" placeholder="last_name"/></br>
+    <label for="dob">Date of Birth:</label>
+    <input type="date" name="dob" placeholder="dob"/></br>
+    <label for="passowrd">Password:</label>
+    <input type="password" name="password" placeholder="password"/></br>
+    
+    <label for="phone_numbers">Phone Numbers:</label>
+    <div id="phone-container">
+    <input type="number" name="phone_numbers[]" placeholder="phone_numbers"/></br>
+    </div>
+    <button type="button" onclick="addPhoneField()">Add Another Phone Number</button></br>
+    
+    <label for="emails">Emails:</label>
+    <div id="email-container">
+    <input type="text" name="emails[]" placeholder="email"/></br>
+    </div>
+    <button type="button" onclick="addEmailField()">Add Another Email</button></br>
+    <input type="submit" value= staffRegister />
+    {% if error %}
+        <p class="error"><strong>Error:</strong>{{error}}</p>
+    {% endif %}
+
+</form>
+
+</body>
+</html>

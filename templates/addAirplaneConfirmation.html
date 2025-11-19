@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Logout</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+    <h1 class="heading">Airplanes in your Airline</h1>
+    <table>
+        <tr>
+            <th>Airplane ID</th>
+            <th>Airline Name</th>
+            <th>Manufacturer</th>
+            <th>Model Number</th>
+            <th>Number of Seats</th>
+        </tr>
+        {% for airplane in airplanes %}
+        <tr>
+            <td>{{ airplane.airplane_id }}</td>
+            <td>{{ airplane.airline_name }}</td>
+            <td>{{ airplane.manufacturer }}</td>
+            <td>{{ airplane.model_number }}</td>
+            <td>{{ airplane.num_seats }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/addAirplane">Add another airplane</a>
+    </body>
+</html>

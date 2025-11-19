@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('staffHome') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Add a New Flight</h1>
+        </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="alert {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+<h2 class="subheading">Please enter the required information</h2>
+<form action="/createFlight" method="POST">
+    <label for="flight_num">Flight Number:</label>
+    <input type="number" name="flight_num" placeholder="flight_num"/></br>
+    <label for="airline_name">Airline Name:</label>
+    <input type="text" name="airline_name" placeholder="airline_name"/></br>
+    <label for="airplane_id">Airplane ID:</label>
+    <input type="number" name="airplane_id" placeholder="airplane_id"/></br>
+    <label for="airport_code">Departure Airport Code:</label>
+    <input type="text" name="airport_code" placeholder="airport_code"/></br>
+    <label for="departure">Departure Time:</label>
+    <input type="datetime-local" name="departure" placeholder="departure"/></br>
+    <label for="arrival">Arrival Time:</label>
+    <input type="datetime-local" name="arrival" placeholder="arrival"/></br>
+    <label for="base_price">Base Price:</label>
+    <input type="text" name="base_price" placeholder="base_price"/></br>
+    <label for="arrival_airport_code">Arrival Airport Code:</label>
+    <input type="text" name="arrival_airport_code" placeholder="arrival_airport_code"/></br>
+    <label for="status">Flight Status:</label>
+    <input type="text" name="status" placeholder="status"/></br>
+    <input type="submit" value= createFlight />
+    
+    {% if error %}
+        <p class="error"><strong>Error:</strong>{{error}}</p>
+    {% endif %}
+</form>
+</body>
+</html>

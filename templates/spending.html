@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>Spending</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="navigation">
+            <div><a href="{{ url_for('userHome') }}">Home</a></div>
+            <div><a href="{{ url_for('tripSearch') }}">Trip Search</a></div>
+            <div><a href="{{ url_for('userPastFlights') }}">Past Flights</a></div>
+            <div><a href="{{ url_for('userLogout') }}">Logout</a></div>
+        </div>
+        <div class="heading">
+            <h1 >Your Spending</h1>
+        </div>
+        <div class='yearSpent'>
+            <div class="spendingSection" >
+                <h2 class="subheading">Last year you spent </h2>
+                <p class="total">${{ totalSpentYear }}</p>
+            </div>
+            <div class="spendingSection">
+                <h2 class="subheading">Here's a look at the last 6 months</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Spent ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr>
+                            <td>{{ row.month }}</td>
+                            <td>{{ row.totalSpent }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+            <form class="dateSpent" action="/spendingUpdate" method='POST'>
+                <div class="dateForm">
+                    <div>
+                        <label for="dateSince">Check your spendings between:</label>
+                        <input type="date" name="startDateInput" placeholder="startDate"/></br>
+                        <input type="date" name="endDateInput" placeholder="endDate"/></br>
+                    <div class="submitButton"><button type="submit" id="submitJS">Submit</button></div>
+                </div>
+            </form>
+        </div>
+
+        
+        
+       
+    </body>
+</html>

@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('staffHome') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Add a New Airport</h1>
+        </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="alert {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+<h2 class="subheading">Please enter the required information</h2>
+<form action="/addAirport" method="POST">
+    <label for="airport_code">Airport Code:</label>
+    <input type="text" name="airport_code" placeholder="airport_code"/></br>
+    <label for="airport_name">Airport Name:</label>
+    <input type="text" name="airport_name" placeholder="airport_name"/></br>
+    <label for="city">City:</label>
+    <input type="text" name="city" placeholder="city"/></br>
+    <label for="country">Country:</label>
+    <input type="text" name="country" placeholder="country"/></br>
+    <label for="num_terminals">Number of Terminals :</label>
+    <input type="number" name="num_terminals" placeholder="num_terminals"/></br>
+    <label for="type">Type: </label>
+    <select name="type" id="type" required>
+        <option value="Domestic">Domestic</option>
+        <option value="International">International</option>
+        <option value="Both">Both</option>
+    </select><br>
+    <input type="submit" value= addAirport />
+    {% if error %}
+        <p class="error"><strong>Error:</strong>{{error}}</p>
+    {% endif %}
+</form>
+</body>
+</html>

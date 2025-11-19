@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('staffHome') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Customers Overview </h1>
+        </div>
+        <div class="frequent-customer-section">
+            <h2 class="subheading">Most Frequent Customer (Last Year)</h2>
+            {% if frequent_customer %}
+            <p><strong>Email:</strong> {{ frequent_customer['email'] }}</p>
+            <p><strong>Flights Taken:</strong> {{ frequent_customer['flight_count'] }}</p>
+            {% else %}
+            <p>No frequent customers found for the last year.</p>
+            {% endif %}
+        </div>
+<div class="all-customers-section">
+            <h2 class="subheading">View Flights for a Customer</h2>
+            <form method="POST" action="{{ url_for('viewCustomers') }}">
+                <label for="email">Select a Customer:</label>
+                <select name="email" id="email" required>
+                    {% for customer in all_customers %}
+                    <option value="{{ customer['email'] }}">{{ customer['email'] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">View Flights</button>
+            </form>
+        </div>
+
+        <!-- Selected Customer Flights Section -->
+        {% if selected_customer %}
+        <div class="customer-flights-section">
+            <h2>Flights for {{ selected_customer }}</h2>
+            {% if customer_flights %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Flight Number</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Departure Airport</th>
+                        <th>Arrival Airport</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flight in customer_flights %}
+                    <tr>
+                        <td>{{ flight['flight_num'] }}</td>
+                        <td>{{ flight['departure'] }}</td>
+                        <td>{{ flight['arrival'] }}</td>
+                        <td>{{ flight['airport_code'] }}</td>
+                        <td>{{ flight['arrival_airport_code'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No flights found for this customer.</p>
+            {% endif %}
+        </div>
+        {% endif %} 
+</div>
+</body>
+</html>

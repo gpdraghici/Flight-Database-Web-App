@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('staffHome') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Add a New Airplane</h1>
+        </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="alert {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+<h2 class="subheading">Please enter the required information</h2>
+<form action="/addAirplane" method="POST">
+    <label for="airplane_id">Airplane ID:</label>
+    <input type="number" name="airplane_id" placeholder="airplane_id"/></br>
+    <label for="airline_name">Airline Name:</label>
+    <input type="text" name="airline_name" placeholder="airline_name"/></br>
+    <label for="manufactuer">Manufactuer:</label>
+    <input type="text" name="manufacturer" placeholder="manufacturer"/></br>
+    <label for="model_number">Model Number:</label>
+    <input type="text" name="model_number" placeholder="model_number"/></br>
+    <label for="manufactur_date">Manufactur Date:</label>
+    <input type="date" name="manufactur_date" placeholder="manufactur_date"/></br>
+    <label for="num_seats">Number of Seats:</label>
+    <input type="number" name="num_seats" placeholder="num_seats"/></br>
+    <input type="submit" value= addAirplane />
+    {% if error %}
+        <p class="error"><strong>Error:</strong>{{error}}</p>
+    {% endif %}
+</form>
+</body>
+</html>

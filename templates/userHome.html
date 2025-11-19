@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>User Home</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div class="navigation">
+            <div><a href="{{ url_for('tripSearch') }}">Flight Search</a></div>
+            <div><a href="{{ url_for('userPastFlights') }}">Past Flights</a></div>
+            <div><a href="{{ url_for('spending') }}">Your Spending</a></div>
+            <div><a href="{{ url_for('userLogout') }}">Logout</a></div>
+        </div>
+
+        <div class="heading">
+            <h1>Welcome {{ name }}!</h1>
+        </div>
+
+        <div class="upcomingTrips">
+            <h2 class="subheading">Upcoming Trips</h2>
+                <!--Loops through user's upcoming trips and displays them, if no trips, message displayed-->
+                {% if flightInfo %}
+                    {% for flight in flightInfo %}
+                        <div class="flights">
+                            <div class = "sectionFlight line1">
+                                <p>{{ flight['airline'] }}</p>
+                                <p>{{ flight['departureDate'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line2">
+                                <p>{{ flight['departureTime'] }}</p>
+                                <p> ----------------------------------------></p>
+                                <p>{{ flight['arrivalTime'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line3">
+                                <p>{{ flight['departureLocation'] }}</p>
+                                <p>{{ flight['arrivalLocation'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line4">
+                                <p>Status: {{ flight['status'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line5">
+                                <form action="/cancelTicket" method="POST">
+                                    <input type="hidden" name="cancelTicket" value="{{ flight['flightNum']}}">
+                                    <button type="submit">Cancel Ticket</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class ="message">
+                        <p>You don't have any upcoming flights</p>
+                    </div>
+                {% endif %}
+        </div>
+    </body>
+</html>

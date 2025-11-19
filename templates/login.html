@@ -1,0 +1,49 @@
+
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="navigation">
+            <div><a href="{{ url_for('homepage') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Welcome!</h1>
+        </div>
+        <div class ='login-container'>
+            <div class="login">
+                <h2 class="subheading">Please enter username or email and password</h2>
+                <form action="/loginAuth" method = "POST">
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Enter username or email"
+                        required
+                        class="form-input"
+                        /><br/>
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                        class="form-input"
+                        /><br/>
+                    <input
+                        type="submit"
+                        value="Login"
+                        class="form-button"
+                        />
+                    {% if error %}
+                        <p class="error"><strong>Error:</strong>{{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

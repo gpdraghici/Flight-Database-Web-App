@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Logout</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="navigation">
+            <div><a href="{{ url_for('tripSearch') }}">Flight Search</a></div>
+            <div><a href="{{ url_for('userPastFlights') }}">Past Flights</a></div>
+            <div><a href="{{ url_for('spending') }}">Your Spending</a></div>
+        </div>
+        <h1 class="heading">Logout</h1>
+        <div class="logout">
+            <h2 class="subheading">Are you sure you want to logout?</h2>
+            <div class="yesNoButtons">
+                <form action='/userLogout' method="POST">
+                    <button type="submit" name ="yesNo" value="logout">Yes</button>
+                    <button type="submit" name ="yesNo" value="home">No</button>
+                </form>
+            </div>
+                    
+    </body>
+</html>

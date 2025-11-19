@@ -1,0 +1,305 @@
+/*Styling that applies to all pages*/
+body{
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    text-align: center;
+    background-color: #fdf6ee;
+    margin: 0;
+    padding: 0;
+}
+
+.heading, .subheading {
+    font-family: "Calistoga", serif;
+
+}
+
+.heading {
+    font-size: 2.7vw;
+}
+
+.subheading {
+    font-size: 2.3vw;
+}
+
+.subsubheading {
+    font-size: 2vw;
+}
+
+p {
+    font-family: "Lexend", sans-serif;
+}
+
+button {
+    background-color: #fb813e;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 10px;
+    font-family: "Lexend", sans-serif;
+    font-size: 1.2vw;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #E26421;
+}
+
+/*Navigation Bar Styling*/
+.navigation {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    justify-content: flex-end;
+    padding-right: 50px;
+    background-color: #ff6d6c;
+    align-items: center;
+    height: 5vh;
+}
+
+/*Tabs of navigation bar styling*/
+.navigation a {
+    display: inline-block;
+    text-decoration: none; 
+    color: inherit; 
+    transition: transform 0.3s ease;
+    font-family: "Lexend", sans-serif;
+    font-size: 1.2vw;
+    margin-left: 30px;
+}
+
+/*Link doesn't change color when clicked*/
+.navigation a:visited {
+    color: inherit; 
+}
+
+/*Words get bigger when mouse is over them*/
+.navigation a:hover {
+    text-decoration: none; 
+    transform: scale(1.2);
+}
+
+/*End styling for every page*/
+
+
+
+
+
+
+
+/*Styling for flight in results.html and userHome.html (The box that information for each flight is in)*/
+/*Upcoming trips styling*/
+.flights {
+    display: flex;
+    flex-direction: column;
+    border: 4px solid #389c48;
+    border-radius: 10px;
+    width: 50vw;
+    padding: 10px 30px 10px 30px ;
+    background-color: #f2efea;
+    margin-top: 50px;
+}
+
+/*separate groups of information in flight data organization*/
+.sectionFlight {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: "Lexend", sans-serif;
+    font-size: 1.2vw;
+}
+
+.line2 {
+    font-size: 1.6vw;
+}
+
+.line4, .line5, .line6, .rating {
+    justify-content: center;
+
+}
+/*End styling for flight data organization*/
+
+
+
+
+
+
+
+/*Styling for flight search*/
+/*Styling for form box of flight search*/
+.flightForm{
+    border: 4px solid #468bca;
+    border-radius: 10px;
+    padding: 10px 30px 10px 30px ;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: s;
+    font-size: 3vw;
+    font-family: "Lexend", sans-serif;
+    font-size: 1.2vw;
+    width: 50vw;
+    background-color: #f2efea;
+}
+
+.formSection {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+/*Return date is hidden until round-trip is clicked*/
+#returnDate{
+    display: none;
+    justify-content: center;
+}
+
+.locations p{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.typeSelection {
+    justify-content: space-between;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+/*End flight search styling*/
+
+
+
+
+
+
+
+/*User spending stylying*/
+.yearSpent, .userSpent {
+    display: flex;
+    flex-direction: row;
+    width: 80vw;
+    margin-top: 60px;
+
+}
+
+
+
+/*Each of the sections of the spending results take up 50% width of the screen*/
+.spendingSection {
+    width: 50%;
+
+}
+
+/*Amount spent styling*/
+.total {
+    font-size: 2vw;
+}
+
+/*Styling for form to enter a date to check spending since*/
+.dateForm {
+    border-radius: 10px;
+    padding: 10px 30px 10px 30px ;
+    margin-top: 50px;
+    font-family: "Lexend", sans-serif;
+}
+
+/*Styling for tables in user spending*/
+table {
+    width: 70%;
+    margin: auto;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/*End user spending styling*/
+
+.bigSection {
+    display: flex;
+    flex-direction: row;
+
+    width: 100vw;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.results2{
+    margin: 0 auto;
+    margin-right: 175px;
+
+
+}
+
+.bubbles{
+    margin-left: auto;
+}
+
+.bubble {
+    background-color: #f98139;
+    color: black;
+    padding: 15px 30px;
+    border-radius: 20px;
+    text-align: center;
+    width: 60%;
+    max-width: 400px;
+    opacity: 100;
+    margin-bottom: 20px;
+    font-family: "Lexend", sans-serif;
+}
+
+.bubble a{
+    text-decoration: none;
+}
+
+.bubble a:visited{
+    color:inherit;
+}
+
+
+/* styling for the pop up confirmation, called with flash function */
+.alert.success {
+    background-color: #d4edda;  /* Green background for success */
+    color: #155724;             /* Green text for success */
+    padding: 15px 30px;         /* Add padding for the rounded box */
+    border-radius: 20px;        /* Rounded corners */
+    margin-top: 20px;
+    text-align: center;
+    width: 60%;
+    max-width: 400px;           /* Set a maximum width */
+    position: fixed;            /* Fixed position so it stays in place */
+    top: 20px;                  /* Space from the top */
+    left: 50%;                  /* Center it horizontally */
+    transform: translateX(-50%);/* Ensure it's centered */
+    z-index: 9999;              /* Make sure it stays on top */
+    opacity: 0;                 /* Initially hidden */
+    animation: fadeIn 5s ease-out forwards; /* Animation to make it fade in */
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        top: 0;
+    }
+    50% {
+        opacity: 1;
+        top: 20px;
+    }
+    100% {
+        opacity: 1;
+        top: 20px;
+    }
+}

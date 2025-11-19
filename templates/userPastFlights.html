@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>User Past Flights</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div class="navigation">
+            <div><a href="{{ url_for('userHome') }}">Home</a></div>
+            <div><a href="{{ url_for('tripSearch') }}">Flight Search</a></div>
+            <div><a href="{{ url_for('spending') }}">Your Spending</a></div>
+            <div><a href="{{ url_for('userLogout') }}">Logout</a></div>
+        </div>
+        <div class="heading">
+            <h1>Your Past Trips</h1>
+        </div>
+        <div class="pastTrips">
+                {% if flightInfo %}
+                    {% for flight in flightInfo %}
+                        <div class="flights">
+                            <div class = "sectionFlight line1">
+                                <p>{{ flight['airline'] }}</p>
+                                <p>{{ flight['departureDate'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line2">
+                                <p>{{ flight['departureTime'] }}</p>
+                                <p> ----------------------------------------></p>
+                                <p>{{ flight['arrivalTime'] }}</p>
+                            </div>
+                            <div class = "sectionFlight line3">
+                                <p>{{ flight['departureLocation'] }}</p>
+                                <p>{{ flight['arrivalLocation'] }}</p>
+                            </div>
+                            <div class = "sectionFlight rating">
+                                <form action="/rateAndComment" method="POST">
+                                    <div>
+                                        <label for="rating">Rate your experience!</label>
+                                        <select name="rating" id="rating">
+                                            <option value="1">1 (Worst flight ever)</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10 (Best flight ever)</option>
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label for="comment">Leave a comment about your flight:</label>
+                                        <input type="text" id="comment" name="comment" placeholder="How was your experience?">
+                                        <br>
+                                    </div>
+                                    <br>
+                                    <input type="hidden" id="ticketID" name="ticket_ID" value = "{{ flight['ticketID'] }}">
+                                    <button type="submit">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class ="message">
+                        <p>You don't have any past flights</p>
+                    </div>
+                {% endif %}
+        </div>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title>User Home</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <header>
+            <div class="navigation">
+            <div><a href="{{ url_for('staffLogout') }}">Logout</a></div>
+            </div>
+        <div class="heading">
+            <h1>Welcome {{ name }}!</h1>
+        </div>
+        </header>
+        
+            <main>
+                <div class="bigSection">
+                    <div class="results2">
+                        <section>
+                            <div class="upcomingTrips">
+                            <h2 class="subheading">Flights in the next 30 days</h2>
+                            </div>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Flight Number</th>
+                                    <th>Departure Airport</th>
+                                    <th>Arrival Airport</th>
+                                    <th>Departure Time</th>
+                                    <th>Arrival Time</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for flight in flights %}
+                                    <tr>
+                                        <td>{{ flight['flight_num'] }}</td>
+                                        <td>{{ flight['airport_code'] }}</td>
+                                        <td>{{ flight['arrival_airport_code'] }}</td>
+                                        <td>{{ flight['departure'] }}</td>
+                                        <td>{{ flight['arrival'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+                
+                    <div class= "actions">
+                        <section>
+                            <div class="bubbles">
+                            
+                                <div class="bubble"><a href="{{ url_for('createFlight') }}">Create New Flight </a></div>
+                                <div class="bubble"><a href="{{ url_for('changeFlightStatus') }}">Change Flight Status</a></div>
+                                <div class="bubble"><a href="{{ url_for('addAirplane') }}">Add Airplane</a></div>
+                                <div class="bubble"><a href="{{ url_for('addAirport') }}">Add Airport</a></div>
+                                <div class="bubble"><a href="{{ url_for('viewRatings') }}">View Ratings</a></div>
+                                <div class="bubble"><a href="{{ url_for('scheduleMaintenance') }}">Schedule Maintenance</a></div>
+                                <div class="bubble"><a href="{{ url_for('viewCustomers') }}">View Customers</a></div>
+                                <div class="bubble"><a href="{{ url_for('viewRevenue') }}">View Revenue</div>
+                            </div>
+                            
+                        </section>
+                    </div>
+                </div>
+        </main>
+    </body>
+</html>

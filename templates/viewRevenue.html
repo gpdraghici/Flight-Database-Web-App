@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/style.css">
+        <script src="static/tripSearch.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    </head>
+<body>
+<div class="navigation">
+            <div><a href="{{ url_for('staffHome') }}">Return to Home</a></div>
+        </div>
+        <div class="heading">
+            <h1>Revenue Overview</h1>
+        </div>
+<div class="container">
+        <div class="revenue-section">
+            <h2 class="subheading">Revenue for the Upcoming Month</h2>
+            <p><strong>${{ revenue_month }}</strong></p>
+        </div>
+        <div class="revenue-section">
+            <h2 class="subheading">Total Revenue for the Year</h2>
+            <p><strong>${{ revenue_year }}</strong></p>
+        </div>
+    </div>
+</body>
+</html>
