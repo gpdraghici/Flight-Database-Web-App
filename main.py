@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, url_for, redirect, flash
+from flask import Flask, render_template, session, request, url_for, redirect, flash, g
 from datetime import datetime
 import sqlite3
 from decimal import Decimal
@@ -8,17 +8,29 @@ from decimal import Decimal
 DATABASE = 'flying_schema.db'
 
 def get_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+    #Get database connection with right settings 
+    if 'db' not in g:
+        g.db = sqlite3.connect(DATABASE, timeout=10.0, check_same_thread=False)
+        g.db.row_factory = sqlite3.Row
+    return g.db
+
+def close_db(e=None):
+    #Close db connection
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 app = Flask(__name__)
 
 app.secret_key = 'gabriel'
 
+# Set close_db to run after each request
+app.teardown_appcontext(close_db)
 
-
-
+# Redirect to homepage
+@app.route('/')
+def index():
+    return redirect(url_for('homepage'))
 
 #function to organize data from query to use for display
 def organizeData(results, organizeType):
@@ -46,7 +58,7 @@ def organizeData(results, organizeType):
         }
 
         #calculate price
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
         query = """SELECT COUNT(Ticket.ticket_id) as tickets
                 FROM flight JOIN ticket ON flight.flight_num = ticket.flight_num
                 WHERE flight.flight_num = ?
@@ -83,14 +95,14 @@ def userHome():
     
     #gets name of user
     email = session['user_id']
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     cursor.execute('SELECT first_name FROM customer WHERE email = ?', (email,))
     user = cursor.fetchone()
     cursor.close()
     name = user['first_name'] 
 
     #gets flights of user
-    conn2 = get_db(); cursor2 = conn2.cursor()
+    db = get_db(); cursor2 = db.cursor()
     query = """SELECT flight.airline_name, flight.airport_code, flight.arrival, flight.departure, flight.arrival_airport_code, flight.base_price, flight.Status, flight.flight_num 
             FROM ticket INNER JOIN flight ON ticket.flight_num = flight.flight_num 
             WHERE ticket.email = ? and flight.departure > datetime('now')
@@ -120,7 +132,7 @@ def tripSearch():
         if request.form.get('retDate'):
             retDate = request.form['retDate']   
     
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
 
 
         #one-way
@@ -136,7 +148,7 @@ def tripSearch():
 
 
         #only happens if round-trip
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
         if tripType == 'round-trip':
             query2 = """SELECT * 
                        FROM flight 
@@ -152,7 +164,7 @@ def tripSearch():
 
         return render_template('results.html', flightInfoLeaving=organizedLeavingData, flightInfoReturning=organizedReturningData, combinedData=combinedData, tripType=tripType)
             
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """SELECT DISTINCT airport_code
                 FROM airport"""
     cursor.execute(query )
@@ -169,13 +181,13 @@ def cancelTicket():
  
     email = session['user_id']
     flightNum = request.form['cancelTicket']
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """DELETE 
                 FROM Ticket
                 WHERE flight_num=? and email=?
             """
     cursor.execute(query, (flightNum, email))
-    conn.commit()
+    get_db().commit()
     cursor.close()
     
     return redirect(url_for('userHome'))
@@ -197,7 +209,7 @@ def actualTicketPurchasel():
     comments = None
     purchaseCardNum = request.form['purchaseCardNum']
     purchaseCardExp = request.form['purchaseCardExp']
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """SELECT MAX(purchase_id) as max_purchase_id, datetime('now') as current_time FROM purchase"""
     cursor.execute(query)
     queryInfo = cursor.fetchall()
@@ -208,7 +220,7 @@ def actualTicketPurchasel():
     ticket_id = (queryInfo2[0]['max_ticket_id'] or 0) + 1
     purchase_id = (queryInfo[0]['max_purchase_id'] or 0) + 1
     now = queryInfo[0]['current_time']
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """INSERT INTO `Ticket` (`ticket_id`, `email`, `flight_num`, `rating`, `comments`, `calc_price`, `first_name`, `last_name`, `dob`) 
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     query2 = """INSERT INTO `Purchase` (`purchase_id`, `ticket_id`, `purchase_date_time`, `card_info`, `card_exp`, `card_type`) 
@@ -216,7 +228,7 @@ def actualTicketPurchasel():
             """
     cursor.execute(query, (ticket_id, purchaseEmail, flight_num1, rating, comments, calc_price1, purchaseFirstName, purchaseLastName, purchaseDOBDate))
     cursor.execute(query2, (purchase_id, ticket_id, now, purchaseCardNum, purchaseCardExp, purchaseCardType))
-    conn.commit()
+    get_db().commit()
     flight_num2 = request.form['purchaseInfoNum2']
     calc_price2 = request.form['purchaseInfoPrice2']
     if flight_num2:
@@ -247,7 +259,7 @@ def purchaseTicketRound():
 @app.route('/userPastFlights', methods=['GET', 'POST'])
 def userPastFlights():
     email = session['user_id']
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """SELECT flight.airline_name, flight.airport_code, flight.arrival, flight.departure, flight.arrival_airport_code, flight.base_price, flight.Status, flight.flight_num, ticket.ticket_id 
             FROM ticket INNER JOIN flight ON ticket.flight_num = flight.flight_num 
             WHERE ticket.email = ? and flight.departure < datetime('now')"""
@@ -290,13 +302,13 @@ def rateAndComment():
     ticket_id = request.form['ticket_ID']
     rating = request.form['rating']
     comment = request.form['comment']
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """UPDATE Ticket 
                 SET rating=?, comments=?
                 WHERE email=? and ticket_id=?
             """
     cursor.execute(query, (rating, comment, email, ticket_id))
-    conn.commit()
+    get_db().commit()
     cursor.close()
     
     return redirect(url_for('userPastFlights'))
@@ -313,7 +325,7 @@ def spending():
     email = session['user_id']
     today = datetime.today()
     oneYearAgo = today.replace(year=today.year - 1)
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """SELECT SUM(ticket.calc_price) as amount
             FROM Purchase JOIN Ticket ON Purchase.ticket_id = Ticket.ticket_id
             WHERE email=? and purchase.purchase_date_time > ?
@@ -348,7 +360,7 @@ def spendingUpdate():
     else:
         sixMonthsAgo = today.replace(month=((12 + today.month - 6)))
     email = session['user_id']
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     startDate = request.form['startDateInput']
     endDate = request.form['endDateInput']
     startDateObj = datetime.strptime(startDate, '%Y-%m-%d')
@@ -435,7 +447,7 @@ def userLogout():
 # function to determine if the user is a customer or staff
 
 def determine_user_type(email, password):
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
 
     cursor.execute('SELECT password FROM Customer WHERE email = ?', (email,))
     customer = cursor.fetchone()
@@ -489,7 +501,7 @@ def homepage():
         if request.form.get('retDate'):
             retDate = request.form['retDate']
 
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
 
         # one-way
         query = """SELECT *
@@ -501,7 +513,7 @@ def homepage():
         cursor.close()
 
         # only happens if round-trip
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
         if tripType == 'round-trip':
             query2 = """SELECT * 
                        FROM flight 
@@ -517,7 +529,7 @@ def homepage():
 
         return render_template('resultsPublic.html', flightInfoLeaving=organizedLeavingData,
                                flightInfoReturning=organizedReturningData, combinedData=combinedData, tripType=tripType)
-    conn = get_db(); cursor = conn.cursor()
+    db = get_db(); cursor = db.cursor()
     query = """SELECT DISTINCT airport_code
                 FROM airport"""
     cursor.execute(query )
@@ -531,11 +543,11 @@ def homepage():
 def staffHome():
     if 'role' in session and session['role'] == 'staff':
         username = session['user']
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
         query = "SELECT * FROM flight WHERE departure > datetime('now') and departure < datetime('now') + INTERVAL 1 MONTH"
         cursor.execute(query)
         flights = cursor.fetchall()
-        conn2 = get_db(); cursor2 = conn2.cursor()
+        db = get_db(); cursor2 = db.cursor()
         cursor2.execute("SELECT first_name FROM staff WHERE username = ?", (username,))
         user = cursor2.fetchall()
         name = user[0]['first_name']
@@ -561,7 +573,7 @@ def customerRegister():
         passport_number = request.form['passport_number']
         passport_exp_date = request.form['passport_exp_date']
 
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
         query = 'Select * FROM Customer WHERE email = ?'
         cursor.execute(query, (username,))
         data = cursor.fetchone()
@@ -581,10 +593,10 @@ def customerRegister():
             phone_q = "INSERT INTO UserPhoneNumbers (email, phone_number) VALUES (?, ?)"
             for phone in phone_numbers:
               cursor.execute(phone_q, (username, phone))
-            conn.commit()
+            get_db().commit()
             
 
-            conn.commit()
+            get_db().commit()
             cursor.close()
             flash("Registration successful!", "success")
 
@@ -605,7 +617,7 @@ def staffRegister():
         phone_numbers = request.form.getlist('phone_numbers[]')
         emails = request.form.getlist('emails[]')
 
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
         query = 'SELECT * FROM Staff WHERE username = ?'
         cursor.execute(query, (username,))
         data = cursor.fetchone()
@@ -628,7 +640,7 @@ def staffRegister():
             phone_q = "INSERT INTO StaffPhoneNumbers (username, phone_number) VALUES (?, ?)"
             for phone in phone_numbers:
               cursor.execute(phone_q, (username, phone))
-            conn.commit()
+            get_db().commit()
             cursor.close()
 
             flash("Registration successful!", "success")
@@ -669,7 +681,7 @@ def createFlight():
             arrival_airport_code = request.form['arrival_airport_code']
             status = request.form['status']
 
-            conn = get_db(); cursor = conn.cursor()
+            db = get_db(); cursor = db.cursor()
             query = 'SELECT * FROM flight WHERE flight_num = ?'
             cursor.execute(query, (flight_num,))
 
@@ -687,7 +699,7 @@ def createFlight():
                 cursor.execute(ins, (
                 flight_num, airline_name, airplane_id, airport_code, arrival, departure, base_price,
                 arrival_airport_code, status))
-                conn.commit()
+                get_db().commit()
                 cursor.close()
                 flash("Flight created!", "success")
                 return render_template('createFlight.html')
@@ -713,7 +725,7 @@ def addAirplane():
             manufactur_date = request.form['manufactur_date']
             num_seats = request.form['num_seats']
 
-            conn = get_db(); cursor = conn.cursor()
+            db = get_db(); cursor = db.cursor()
             query = 'SELECT * FROM Airplane WHERE airplane_id = ?'
             cursor.execute(query, (airplane_id,))
 
@@ -727,7 +739,7 @@ def addAirplane():
             else:
                 ins = 'INSERT INTO Airplane(airplane_id, airline_name, manufacturer, model_number, manufacture_date, num_seats) VALUES (?, ?, ?, ?, ?, ?)'
                 cursor.execute(ins, (airplane_id, airline_name, manufacturer, model_number, manufactur_date, num_seats))
-                conn.commit()
+                get_db().commit()
                 #cursor.close()
                 
                 query_airplanes = 'SELECT * FROM Airplane WHERE airline_name = ?'
@@ -758,7 +770,7 @@ def addAirport():
             num_terminals = request.form['num_terminals']
             airportType = request.form['type']
 
-            conn = get_db(); cursor = conn.cursor()
+            db = get_db(); cursor = db.cursor()
             query = 'SELECT * FROM Airport WHERE airport_code = ?'
             cursor.execute(query, (airport_code,))
             data = cursor.fetchone()
@@ -771,7 +783,7 @@ def addAirport():
             else:
                 ins = 'INSERT INTO Airport VALUES (?, ?, ?, ?, ?, ?)'
                 cursor.execute(ins, (airport_code, airport_name, city, country, num_terminals, airportType))
-                conn.commit()
+                get_db().commit()
                 cursor.close()
                 flash("Airport added!", "success")
                 return render_template("addAirport.html")
@@ -789,7 +801,7 @@ def addAirport():
 def viewRatings():
     if 'role' in session and session['role'] == 'staff':
         # gets the ratings from the flight
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
 
         cursor.execute(
             'SELECT ticket.rating, ticket.flight_num, ticket.comments FROM Ticket INNER JOIN Flight on Ticket.flight_num = Flight.flight_num')
@@ -837,7 +849,7 @@ def scheduleMaintenance():
             start_date_time = request.form['start_date_time']
             end_date_time = request.form['end_date_time']
 
-            conn = get_db(); cursor = conn.cursor()
+            db = get_db(); cursor = db.cursor()
             query = 'SELECT * FROM Maitenance WHERE airplane_id = ?'
             cursor.execute(query, (airplane_id,))
 
@@ -851,7 +863,7 @@ def scheduleMaintenance():
             else:
                 ins = 'INSERT INTO Maitenance VALUES (?, ?, ?)'
                 cursor.execute(ins, (airplane_id, start_date_time, end_date_time))
-                conn.commit()
+                get_db().commit()
                 cursor.close()
                 flash("Maitenance scheduled!", "success")
                 return render_template("scheduleMaintenance.html")
@@ -869,7 +881,7 @@ def scheduleMaintenance():
 @app.route('/viewCustomers', methods=['GET', 'POST'])
 def viewCustomers():
     if 'role' in session and session['role'] == 'staff':
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
 
         # Query to get the most frequent customer in the last year
         query_frequent_customer = "SELECT Ticket.email, COUNT(*) AS flight_count FROM Ticket INNER JOIN Flight ON Ticket.flight_num = Flight.flight_num WHERE Flight.departure > DATE_SUB(datetime('now'), INTERVAL 1 YEAR) GROUP BY Ticket.email ORDER BY flight_count DESC LIMIT 1"
@@ -905,7 +917,7 @@ def viewCustomers():
 def viewRevenue():
     if 'role' in session and session['role'] == 'staff':
 
-        conn = get_db(); cursor = conn.cursor()
+        db = get_db(); cursor = db.cursor()
 
         from datetime import datetime, timedelta
         current_date = datetime.now()
@@ -939,10 +951,10 @@ def changeFlightStatus():
             status = request.form['status']
             airplane_id = request.form['airplane_id']
 
-            conn = get_db(); cursor = conn.cursor()
+            db = get_db(); cursor = db.cursor()
             query = """UPDATE Flight SET status = ? WHERE airplane_id = ?"""
             cursor.execute(query, (status, airplane_id))
-            conn.commit()
+            get_db().commit()
 
             cursor.close()
 

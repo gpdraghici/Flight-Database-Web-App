@@ -17,3 +17,6 @@ Customer user:
 -Leave ratings and comments for flights
 -Track spending
 -Login/Logout
+
+Lost SQL database :| so switched to SQLitie for simplicity
+Will add more flights to schema, just running for now
