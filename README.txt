@@ -17,8 +17,3 @@ Customer user:
 -Leave ratings and comments for flights
 -Track spending
 -Login/Logout
-
-Tech Stack:
-Python, using Flask
-HTML, CSS, JavaScript
-MySQL
